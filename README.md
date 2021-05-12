@@ -1,4 +1,4 @@
-# MagOKO Config
+# MagOKO Config [![Build](https://github.com/deepinthink-magoko/magoko-config/actions/workflows/maven.yml/badge.svg)](https://github.com/deepinthink-magoko/magoko-config/actions/workflows/maven.yml)
 DEEPINTHINK MagOKO Config server implementation.
 
 ## License

@@ -43,5 +43,7 @@
   <modules>
     <module>magoko-config-bom</module>
     <module>magoko-config-build-parent</module>
+    <module>magoko-config-server-core</module>
+    <module>magoko-starter-config-server</module>
   </modules>
 </project>

@@ -18,12 +18,22 @@
     <dependencies>
       <dependency>
         <groupId>org.deepinthink.magoko</groupId>
+        <artifactId>magoko-config-client-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.deepinthink.magoko</groupId>
         <artifactId>magoko-config-server-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.deepinthink.magoko</groupId>
         <artifactId>magoko-starter-config-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.deepinthink.magoko</groupId>
+        <artifactId>magoko-starter-config-client</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

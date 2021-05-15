@@ -1,0 +1,4 @@
+# Environment Post Processors
+org.springframework.boot.env.EnvironmentPostProcessor=\
+org.deepinthink.magoko.config.client.core.LocalEnvPostProcessor,\
+org.deepinthink.magoko.config.client.core.RemoteEnvPostProcessor

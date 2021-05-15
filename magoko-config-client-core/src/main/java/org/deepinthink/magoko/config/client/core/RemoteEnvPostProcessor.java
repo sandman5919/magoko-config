@@ -20,7 +20,6 @@ import static org.deepinthink.magoko.config.client.core.ConfigClientProperties.P
 import java.util.Optional;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
-import org.springframework.boot.env.SpringApplicationJsonEnvironmentPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
@@ -29,7 +28,7 @@ public class RemoteEnvPostProcessor implements EnvironmentPostProcessor, Ordered
 
   public static final String REMOTE_PROPERTY = "magoko.remote.properties";
 
-  public static final int ORDER = SpringApplicationJsonEnvironmentPostProcessor.DEFAULT_ORDER - 1;
+  public static final int ORDER = Ordered.LOWEST_PRECEDENCE;
 
   @Override
   public int getOrder() {

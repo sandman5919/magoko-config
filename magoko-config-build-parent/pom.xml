@@ -16,6 +16,7 @@
   <description>MagOKO Config :: Build Parent</description>
   <properties>
     <dep.spring-boot.version>2.3.10.RELEASE</dep.spring-boot.version>
+    <dep.openfeign.version>11.2</dep.openfeign.version>
     <parameter.license-header.location>
       ${basedir}/../magoko-config-build-parent/src/license-header.txt
     </parameter.license-header.location>
@@ -33,6 +34,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${dep.spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-bom</artifactId>
+        <version>${dep.openfeign.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

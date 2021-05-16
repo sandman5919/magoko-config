@@ -10,27 +10,18 @@
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../magoko-config-build-parent/pom.xml</relativePath>
   </parent>
-  <artifactId>magoko-config-client-core</artifactId>
+  <artifactId>magoko-config-sample-client</artifactId>
   <packaging>jar</packaging>
-  <name>magoko-config-client-core</name>
-  <description>MagOKO Config :: Client Core</description>
+  <name>magoko-config-sample-client</name>
+  <description>MagOKO Config :: Sample Client</description>
   <dependencies>
     <dependency>
-      <groupId>io.projectreactor</groupId>
-      <artifactId>reactor-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.openfeign</groupId>
-      <artifactId>feign-okhttp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.openfeign</groupId>
-      <artifactId>feign-jackson</artifactId>
+      <groupId>org.deepinthink.magoko</groupId>
+      <artifactId>magoko-starter-config-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

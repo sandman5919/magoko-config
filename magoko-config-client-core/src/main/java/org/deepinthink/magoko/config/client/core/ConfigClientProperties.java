@@ -18,8 +18,10 @@ package org.deepinthink.magoko.config.client.core;
 public class ConfigClientProperties {
   public static final String PREFIX = "magoko.config.client";
   public static final boolean DEFAULT_ENABLE = false;
+  public static final String DEFAULT_URL = "http://127.0.0.1:8001";
 
   private boolean enable = DEFAULT_ENABLE;
+  private String url = DEFAULT_URL;
 
   public boolean isEnable() {
     return enable;
@@ -27,5 +29,13 @@ public class ConfigClientProperties {
 
   public void setEnable(boolean enable) {
     this.enable = enable;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
   }
 }

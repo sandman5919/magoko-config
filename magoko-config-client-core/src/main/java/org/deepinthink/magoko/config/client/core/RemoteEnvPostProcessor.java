@@ -60,26 +60,26 @@ public class RemoteEnvPostProcessor
   public void postProcessEnvironment(
       ConfigurableEnvironment environment, SpringApplication application) {
     Mono.just(LocalEnvPostProcessor.LOCAL_PROPERTY)
-        .filter(environment.getSystemEnvironment()::containsKey)
+        .filter(environment.getPropertySources()::contains)
         .map(environment.getPropertySources()::get)
         .cast(PropertiesPropertySource.class)
         .map(this::buildConfigClientProperties)
         .filter(ConfigClientProperties::isEnable)
-        .map(this::buildRemoveConfigApi)
-        .map(RemoveConfigApi::requestConfig)
-        .doOnError(logger::error)
+        .map(this::feignRequestConfig)
         .filter(Map::isEmpty)
         .map(m -> Mono.fromSupplier(Properties::new).doOnNext(p -> p.putAll(m)).block())
         .map(p -> new PropertiesPropertySource(REMOTE_PROPERTY, p))
+        .doOnError(logger::error)
         .subscribe(environment.getPropertySources()::addLast);
   }
 
-  private RemoveConfigApi buildRemoveConfigApi(ConfigClientProperties ccp) {
+  private Map<String, String> feignRequestConfig(ConfigClientProperties ccp) {
     return Feign.builder()
         .encoder(new JacksonEncoder())
         .decoder(new JacksonDecoder())
         .retryer(Retryer.NEVER_RETRY)
-        .target(RemoveConfigApi.class, "http://localhost");
+        .target(RemoveConfigApi.class, ccp.getUrl())
+        .requestConfig();
   }
 
   private ConfigClientProperties buildConfigClientProperties(PropertiesPropertySource pps) {

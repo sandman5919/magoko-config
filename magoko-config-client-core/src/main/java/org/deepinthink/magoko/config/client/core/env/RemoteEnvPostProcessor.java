@@ -13,26 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.deepinthink.magoko.config.client.core;
+package org.deepinthink.magoko.config.client.core.env;
 
-import static org.deepinthink.magoko.config.client.core.ConfigClientProperties.PREFIX;
+import static org.deepinthink.magoko.config.client.core.config.ConfigClientProperties.PREFIX;
+import static org.deepinthink.magoko.config.client.core.env.LocalEnvPostProcessor.LOCAL_PROPERTY;
 
-import feign.Feign;
-import feign.RequestLine;
-import feign.Retryer;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import org.deepinthink.magoko.config.client.core.config.ConfigClientProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.logging.DeferredLog;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.http.MediaType;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.messaging.rsocket.RSocketRequester;
+import org.springframework.messaging.rsocket.RSocketStrategies;
+import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 import reactor.core.publisher.Mono;
 
 public class RemoteEnvPostProcessor
@@ -51,35 +56,41 @@ public class RemoteEnvPostProcessor
     logger.switchTo(RemoteEnvPostProcessor.class);
   }
 
-  interface RemoveConfigApi {
-    @RequestLine("GET /config")
-    Map<String, String> requestConfig();
-  }
+  private static final MediaType[] SUPPORTED_TYPES = {
+    MediaType.APPLICATION_JSON, new MediaType("application", "*+json")
+  };
 
   @Override
   public void postProcessEnvironment(
       ConfigurableEnvironment environment, SpringApplication application) {
-    Mono.just(LocalEnvPostProcessor.LOCAL_PROPERTY)
+    Mono.just(LOCAL_PROPERTY)
         .filter(environment.getPropertySources()::contains)
         .map(environment.getPropertySources()::get)
         .cast(PropertiesPropertySource.class)
         .map(this::buildConfigClientProperties)
         .filter(ConfigClientProperties::isEnable)
-        .map(this::feignRequestConfig)
-        .filter(Map::isEmpty)
+        .map(this::rSocketRequestConfig)
         .map(m -> Mono.fromSupplier(Properties::new).doOnNext(p -> p.putAll(m)).block())
         .map(p -> new PropertiesPropertySource(REMOTE_PROPERTY, p))
         .doOnError(logger::error)
-        .subscribe(environment.getPropertySources()::addLast);
+        .subscribe(pps -> environment.getPropertySources().addBefore(LOCAL_PROPERTY, pps));
   }
 
-  private Map<String, String> feignRequestConfig(ConfigClientProperties ccp) {
-    return Feign.builder()
-        .encoder(new JacksonEncoder())
-        .decoder(new JacksonDecoder())
-        .retryer(Retryer.NEVER_RETRY)
-        .target(RemoveConfigApi.class, ccp.getUrl())
-        .requestConfig();
+  private Map<String, String> rSocketRequestConfig(ConfigClientProperties ccp) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    return RSocketRequester.builder()
+        .rsocketStrategies(
+            RSocketStrategies.builder()
+                .routeMatcher(new PathPatternRouteMatcher())
+                .decoder(new Jackson2JsonDecoder(objectMapper, SUPPORTED_TYPES))
+                .encoder(new Jackson2JsonEncoder(objectMapper, SUPPORTED_TYPES))
+                .build())
+        .connectTcp(ccp.getServerHost(), ccp.getServerPort())
+        .block()
+        .route(ccp.getConfigRoute())
+        .retrieveMono(new ParameterizedTypeReference<Map<String, String>>() {})
+        .doOnError(logger::error)
+        .block();
   }
 
   private ConfigClientProperties buildConfigClientProperties(PropertiesPropertySource pps) {

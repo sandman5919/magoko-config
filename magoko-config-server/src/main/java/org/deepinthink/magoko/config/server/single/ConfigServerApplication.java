@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableConfigServer
 @SpringBootApplication
 public class ConfigServerApplication {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     SpringApplication.run(ConfigServerApplication.class, args);
   }
 }

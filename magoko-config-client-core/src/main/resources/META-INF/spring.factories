@@ -1,8 +1,8 @@
 # Application Listeners
 org.springframework.context.ApplicationListener=\
-org.deepinthink.magoko.config.client.core.RemoteEnvPostProcessor
+org.deepinthink.magoko.config.client.core.env.RemoteEnvPostProcessor
 
 # Environment Post Processors
 org.springframework.boot.env.EnvironmentPostProcessor=\
-org.deepinthink.magoko.config.client.core.LocalEnvPostProcessor,\
-org.deepinthink.magoko.config.client.core.RemoteEnvPostProcessor
+org.deepinthink.magoko.config.client.core.env.LocalEnvPostProcessor,\
+org.deepinthink.magoko.config.client.core.env.RemoteEnvPostProcessor

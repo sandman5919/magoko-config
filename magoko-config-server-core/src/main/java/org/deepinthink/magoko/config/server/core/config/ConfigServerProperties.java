@@ -13,23 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.deepinthink.magoko.config.sample.client;
+package org.deepinthink.magoko.config.server.core.config;
 
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Service
-public class SampleLocalService {
-  @Value("${magoko.config.sample.k1:10}")
-  public int k1;
-
-  @Value("${magoko.config.sample.k2:undefined}")
-  public String k2;
-
-  @PostConstruct
-  public void echo() {
-    System.out.println(k1);
-    System.out.println(k2);
-  }
+@ConfigurationProperties(prefix = ConfigServerProperties.PREFIX)
+public class ConfigServerProperties {
+  public static final String PREFIX = "magoko.config.server";
 }

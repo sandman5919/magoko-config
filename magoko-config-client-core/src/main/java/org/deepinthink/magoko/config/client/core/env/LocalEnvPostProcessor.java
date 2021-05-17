@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.deepinthink.magoko.config.client.core;
+package org.deepinthink.magoko.config.client.core.env;
 
 import java.io.IOException;
 import java.util.Properties;

@@ -19,5 +19,9 @@
       <groupId>org.deepinthink.magoko</groupId>
       <artifactId>magoko-starter-config-server</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.deepinthink.magoko</groupId>
+      <artifactId>magoko-starter-boot</artifactId>
+    </dependency>
   </dependencies>
 </project>

@@ -15,14 +15,23 @@
  */
 package org.deepinthink.magoko.config.server.single;
 
+import org.deepinthink.magoko.boot.core.MagOKOBanner;
 import org.deepinthink.magoko.config.server.core.EnableConfigServer;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @EnableConfigServer
 @SpringBootApplication
 public class ConfigServerApplication {
   public static void main(String[] args) throws Exception {
-    SpringApplication.run(ConfigServerApplication.class, args);
+    new SpringApplicationBuilder()
+        .sources(ConfigServerApplication.class)
+        .banner(
+            MagOKOBanner.builder()
+                .tag("Config Server Standalone Application")
+                .tag(
+                    "For more information, please visit our website: https://maogko.deepinthink.org/magoko-config")
+                .build())
+        .run(args);
   }
 }

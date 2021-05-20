@@ -29,8 +29,8 @@ public class ConfigServerApplication {
         .banner(
             MagOKOBanner.builder()
                 .tag("Config Server Standalone Application")
-                .tag(
-                    "For more information, please visit our website: https://maogko.deepinthink.org/magoko-config")
+                .tag("For more information, please visit our website:")
+                .tag("\thttps://maogko.deepinthink.org/magoko-config")
                 .build())
         .run(args);
   }

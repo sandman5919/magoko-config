@@ -37,6 +37,7 @@ import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.RSocketStrategies;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 import reactor.core.publisher.Mono;
 
@@ -44,6 +45,9 @@ public class RemoteEnvPostProcessor
     implements EnvironmentPostProcessor, ApplicationListener<ApplicationPreparedEvent>, Ordered {
   private static final DeferredLog logger = new DeferredLog();
   public static final String REMOTE_PROPERTY = "magoko.remote.properties";
+  public static final String ENABLE_MARKER_CLASS =
+      "org.deepinthink.magoko.config.client.core.EnableMarker";
+
   public static final int ORDER = Ordered.LOWEST_PRECEDENCE;
 
   @Override
@@ -63,7 +67,9 @@ public class RemoteEnvPostProcessor
   @Override
   public void postProcessEnvironment(
       ConfigurableEnvironment environment, SpringApplication application) {
-    Mono.just(LOCAL_PROPERTY)
+    Mono.just(ClassUtils.isPresent(ENABLE_MARKER_CLASS, null))
+        .filter(Boolean::valueOf)
+        .map(b -> LOCAL_PROPERTY)
         .filter(environment.getPropertySources()::contains)
         .map(environment.getPropertySources()::get)
         .cast(PropertiesPropertySource.class)
